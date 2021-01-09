@@ -3,6 +3,7 @@ from . import parameter as param
 import mysql.connector
 import pandas as pd
 import datetime
+import json
 
 def Run(deviceid, time_ref):
 	""" 
@@ -33,7 +34,10 @@ def Run(deviceid, time_ref):
 	db_cursor.execute(query)
 	df1=pd.DataFrame(db_cursor.fetchall())
 	df1.columns= ['node','deviceid','student','rollno']
-	inf_node= df1[df1.deviceid==deviceid].iloc[0]['node']
+	dict_identity = dict(zip(df1.deviceid, df1.node))
+	#print(dict_identity)
+	inf_node= dict_identity[deviceid]
+	#print(inf_node)
 	query = ("SELECT MIN(time) FROM activity")
 	db_cursor.execute(query)
 	row = db_cursor.fetchone()
@@ -45,6 +49,7 @@ def Run(deviceid, time_ref):
 		print("Empty activity database, Try again with different date or deviceid")
 		return
 	df2.columns= ['slno','time','node','lat','long']
+	#print(str(df2.iloc[0,1]))
 	df_inf= df2[df2.node==inf_node]
 	df2= df2[df2.node!=inf_node]
 	score={}
@@ -59,6 +64,26 @@ def Run(deviceid, time_ref):
 				except:
 					score[df_tmp.iloc[j,2]]= score_tmp
 
+	################## Bluetooth Contruction ##############
+	#Bluetooth Connection and Score Generation (Under Construction)
+	with open(r'C:\Users\HP\Desktop\project\Contact_Graph\bluetooth.txt') as json_file:
+			data1 = json.load(json_file)
+			data1 = data1[deviceid]
+			#print(data1)
+			for time, arr in data1.items():
+					time_obj = datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
+					if (time_ref-datetime.timedelta(days=prm.duration)) > time_obj:
+						continue
+					df_time= df2[df2.time==time_obj]
+					score_tmp= decayfunc(time_obj,time_ref)
+					for dev_id in arr:
+						if dev_id not in df_time.time:
+							try:
+								score[dict_identity[dev_id]]+= score_tmp
+							except:
+								score[dict_identity[dev_id]]= score_tmp
+
+    ######################### End Here ####################
 	ans=sorted( ((v,k) for k,v in score.items()), reverse=True)
 	for (val,key) in ans:
-		print("node no. => ",key," and score =>",val)
+		print("Name",df1[df1.node==key].iloc[0,2]," node no. => ",key," and score =>",val)

@@ -5,4 +5,4 @@ class Para:
         self.password=""
         self.dbname="contactgraph"
         self.duration= 14    # in days
-        self.infectdist=10  # in metres (infection radius, default value keep around 10)
+        self.infectdist= 50 # in metres (infection radius, default value keep around 10)
