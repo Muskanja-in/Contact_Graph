@@ -65,7 +65,7 @@ def Run(deviceid, time_ref):
 					score[df_tmp.iloc[j,2]]= score_tmp
 
 	################## Bluetooth Contruction ##############
-	#Bluetooth Connection and Score Generation (Under Construction)
+	#Bluetooth Connection and Score Generation
 	with open(r'C:\Users\HP\Desktop\project\Contact_Graph\bluetooth.txt') as json_file:
 			data1 = json.load(json_file)
 			data1 = data1[deviceid]
@@ -83,7 +83,7 @@ def Run(deviceid, time_ref):
 							except:
 								score[dict_identity[dev_id]]= score_tmp
 
-    ######################### End Here ####################
+    #############################################
 	ans=sorted( ((v,k) for k,v in score.items()), reverse=True)
 	for (val,key) in ans:
 		print("Name",df1[df1.node==key].iloc[0,2]," node no. => ",key," and score =>",val)

@@ -1,0 +1,28 @@
+Create a database "contactgraph" consisting of Identity and Activity tables :
+Identity table will contain device id, student name, rollno` and assign a unique node number to track its activity
+Activity table will contain time and location(latitude,longitude`) for each of these nodes.
+
+Script for Identity table =>
+
+CREATE TABLE `identity` (
+  `node` int NOT NULL AUTO_INCREMENT,
+  `deviceid` varchar(45) NOT NULL,
+  `student` varchar(45) DEFAULT NULL,
+  `rollno` varchar(45) NOT NULL,
+  PRIMARY KEY (`node`),
+  UNIQUE KEY `deviceid_UNIQUE` (`deviceid`),
+  UNIQUE KEY `Roll Number_UNIQUE` (`rollno`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+Script for Activity table =>
+
+CREATE TABLE `activity` (
+  `slno` int NOT NULL AUTO_INCREMENT,
+  `time` datetime NOT NULL,
+  `node` int DEFAULT NULL,
+  `latitude` decimal(8,6) NOT NULL,
+  `longitude` decimal(9,6) NOT NULL,
+  PRIMARY KEY (`slno`),
+  UNIQUE KEY `slno_UNIQUE` (`slno`)
+) ENGINE=InnoDB AUTO_INCREMENT=16801 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
