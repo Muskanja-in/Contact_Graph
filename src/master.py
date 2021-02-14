@@ -4,6 +4,7 @@ import mysql.connector
 import pandas as pd
 import datetime
 import json
+from pyvis.network import Network
 
 def Run(deviceid, time_ref):
 	""" 
@@ -35,6 +36,7 @@ def Run(deviceid, time_ref):
 	df1=pd.DataFrame(db_cursor.fetchall())
 	df1.columns= ['node','deviceid','student','rollno']
 	dict_identity = dict(zip(df1.deviceid, df1.node))
+	rev_dict_identity = dict(zip(df1.node, df1.deviceid ))
 	#print(dict_identity)
 	inf_node= dict_identity[deviceid]
 	#print(inf_node)
@@ -83,7 +85,25 @@ def Run(deviceid, time_ref):
 							except:
 								score[dict_identity[dev_id]]= score_tmp
 
-    #############################################
+	#############################################
+	node_list=[inf_node]
+	label_list=[deviceid]
+	color_list=["#C0392B"]
+	value_list=[0]
+	title_list=["Infected Node"]
 	ans=sorted( ((v,k) for k,v in score.items()), reverse=True)
+	edges_list=[]
 	for (val,key) in ans:
+		node_list.append(key)
+		label_list.append(rev_dict_identity[key])
+		color_list.append('#2E86C1')
+		edges_list.append((int(inf_node),int(key),float(val)))
+		value_list.append(val)
+		title_list.append("Score: "+str(val))
 		print("Name",df1[df1.node==key].iloc[0,2]," node no. => ",key," and score =>",val)
+	#####Visualize###############
+	value_list[0]= max(value_list)*2
+	g= Network("500px", "500px",directed=False)
+	g.add_nodes(node_list,label=label_list,title=title_list,value=value_list,color=color_list)
+	g.add_edges(edges_list)
+	g.show("nx.html")
