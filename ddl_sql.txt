@@ -1,6 +1,7 @@
 Create a database "contactgraph" consisting of Identity and Activity tables :
 Identity table will contain device id, student name, rollno` and assign a unique node number to track its activity
 Activity table will contain time and location(latitude,longitude`) for each of these nodes.
+imputed table will contain the latitude and longitude for each the missing geo-coordinates data of nodes
 
 Script for Identity table =>
 
@@ -12,7 +13,7 @@ CREATE TABLE `identity` (
   PRIMARY KEY (`node`),
   UNIQUE KEY `deviceid_UNIQUE` (`deviceid`),
   UNIQUE KEY `Roll Number_UNIQUE` (`rollno`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 Script for Activity table =>
@@ -25,4 +26,16 @@ CREATE TABLE `activity` (
   `longitude` decimal(9,6) NOT NULL,
   PRIMARY KEY (`slno`),
   UNIQUE KEY `slno_UNIQUE` (`slno`)
-) ENGINE=InnoDB AUTO_INCREMENT=16801 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+Script for Imputed table =>
+
+CREATE TABLE `imputed` (
+  `sl_no` int NOT NULL AUTO_INCREMENT,
+  `time` datetime NOT NULL,
+  `node` int DEFAULT NULL,
+  `latitude` decimal(8,6) NOT NULL,
+  `longitude` decimal(9,6) NOT NULL,
+  PRIMARY KEY (`sl_no`),
+  UNIQUE KEY `sl_no_UNIQUE` (`sl_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
